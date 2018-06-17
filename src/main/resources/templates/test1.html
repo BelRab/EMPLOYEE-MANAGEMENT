@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>PAGE DE TEST</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+	
+	<form th:action="/test1" method="get">
+	
+	<!--DEUX CHAMPS DE TEXT -->
+		<input type="text" th:name="val1"/>
+		<input type="text" th:name="val2"/>
+	<!--UNE BOUTON SUBMIT -->
+		<input type="submit" th:value="valider"/>
+	</form>
+	<p th:text="${val1}"></p>
+	<p th:text="${val2}"></p>
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

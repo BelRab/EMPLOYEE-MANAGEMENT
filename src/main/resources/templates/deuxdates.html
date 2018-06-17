@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>Recherche entre deux dates</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+	<!-- 	nav bar template -->
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Solinum Administrateur</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="/gestion_employe">Gestion des employés</a></li>
+				<li><a href="/gestion_service">Gestion des services</a></li>
+				<li><a href="/recherche_service">Recherche par service</a></li>
+				<li class="active"><a href="/deux_dates">Entre deux dates</a></li>
+				<li><a href="/statistiques">Statistiques</a></li>
+			</ul>
+		</div>
+	</nav>
+
+<!--PANNEL POUR AFFICHER ENTRE LES DEUX DATES -->
+	<div class="col-sm-offset+0 col-sm-12" align="justify">
+		<div class="panel-group">
+			<div class="panel panel-default" style="width: 20%">
+				<div class="panel-heading">Liste des employés entre deux dates</div>
+				<div class="panel-body">
+					
+					<form class="form-horizontal" method="post" th:action="@{/deux_dates}">
+					
+						<!-- DATE DE DEBUT -->
+							<label for="dateStart">Date de début :</label>
+								<input type="date" class="form-control" id="dateStart" name="dateStart"/>
+						
+						<!-- DATE DE FIN -->
+							<label for="dateEnd">Date de fin :</label>
+								<input type="date" class="form-control" id="dateEnd" name="dateEnd"/><br><br>
+	
+						<!-- SUBMIT -->
+							<div class="form-group">
+								<div class="col-sm-offset+2 col-sm-5">
+									<button type="submit" class="btn btn-default">Submit</button>
+								</div>
+							</div>
+					
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- TABLE AFFICHAGE DES EMPLOYÉ -->
+	<p th:if="${erreur}" th:text="${erreur}"></p>
+	<div th:if="${employers}" class="col-sm-offset+0 col-sm-12" id="tableToShow" style="display : block">
+		<table class="table table-bordered table-sm">
+			<thead>
+				<tr>
+					<th>Firstname</th>
+					<th>Lastname</th>
+					<th>Salary</th>
+					<th>Service</th>
+					<th>Embauche Date</th>
+					<th>Login</th>
+					<th>Password</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="employer : ${employers}">
+					<td><label id="labelCode" th:text="${employer.name}"></label></td>
+					<td><label id="labelCode" th:text="${employer.lastName}"></label></td>
+					<td><label id="labelCode" th:text="${employer.salary}"></label></td>
+					<td><label id="labelCode" th:text="${employer.service.libelle}"></label></td>
+					<td><label id="labelCode" th:text="${employer.dateEmbauche}"></label></td>
+					<td><label id="labelCode" th:text="${employer.login}"></label></td>
+					<td><label id="labelCode" th:text="${employer.password}"></label></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+</html>

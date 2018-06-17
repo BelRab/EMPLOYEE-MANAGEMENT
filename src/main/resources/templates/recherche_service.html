@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>Recherche entre deux dates</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+	<!-- 	nav bar template -->
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Solinum Administrateur</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="/gestion_employe">Gestion des employés</a></li>
+				<li><a href="/gestion_service">Gestion des services</a></li>
+				<li class="active"><a href="/recherche_service">Recherche
+						par service</a></li>
+				<li><a href="/deux_dates">Entre deux dates</a></li>
+				<li><a href="/statistiques">Statistiques</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<!--FORMULAIRE POUR AFFICHER LA RECHERCHE DES SERVICES -->
+	<div class="col-sm-offset+0 col-sm-12" align="center">
+		<div class="panel-group">
+			<div class="panel panel-default" style="width: 40%">
+				<div class="panel-heading">Recherche par service des employés</div>
+				<div class="panel-body">
+				<!--FORMULAIRES -->
+				
+				<!-- SELECT AUX CHOIX -->
+					<form method="get" th:action="@{/recherche_Employer_par_service}">		<!-- je crois je dois changer le mapping -->
+						<div class="form-group">
+							<label for="service" class="control-label col-sm-5">Choisir
+								un service :</label>
+							<div class="col-sm-9">
+								<select class="form-control" name="valService" th:id="libelleSelect">
+									<option th:each="service : ${services}" th:text="${service.libelle}">
+									</option>
+								</select>
+							</div>
+								<button type="submit" class="btn btn-default">Find</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- AFFICHAGE DES EMPLOYÉS PAR SERVICE -->
+
+	<div align="center" th:if="${employers}">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Firstname</th>
+					<th>Lastname</th>
+					<th>Salary</th>
+					<th>Service</th>
+					<th>Embauche Date</th>
+				</tr>
+			</thead>
+			<tbody>
+							<tr  th:each="employer : ${employers}">
+								<td th:text="${employer.name}"></td>
+								<td th:text="${employer.lastName}"></td>
+								<td th:text="${employer.salary}"></td>
+								<td th:text="${employer.service.libelle}"></td>
+								<td th:text="${employer.dateEmbauche}"></td>
+							</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

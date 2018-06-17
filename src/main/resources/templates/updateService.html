@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+</head>
+<body>
+	<!-- 	nav bar template -->
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Solinum Administrateur</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="/gestion_employe">Gestion des employés</a></li>
+				<li class="active"><a href="/gestion_service">Gestion des
+						services</a></li>
+				<li><a href="/recherche_service">Recherche par service</a></li>
+				<li><a href="/deux_dates">Entre deux dates</a></li>
+				<li><a href="/statistiques">Statistiques</a></li>
+			</ul>
+		</div>
+	</nav>
+	<form class="form-inline" th:action="@{/update_service}" method="post">
+		
+		<div class="form-group">
+			<input type="text"
+				class="form-control" id="idService" name="idService" th:value="${service.idService}" style="display: none">
+		</div>
+		
+		<div class="form-group">
+			<label for="code">Code :</label> <input type="text"
+				class="form-control" id="code" name="code" th:value="${service.code}">
+		</div>
+		<div class="form-group">
+			<label for="libelle">Libelle:</label> <input type="text"
+				class="form-control" id="libelle" name="libelle"
+				th:value="${service.libelle}">
+		</div>
+		<button type="submit" class="btn btn-default">Update</button>
+	</form>
+
+</body>
+</html>
