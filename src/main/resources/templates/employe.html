@@ -26,24 +26,28 @@
 	</nav>
 
 	<div class="container">
-		
+
 		<!-- 	formulaire d'ajout des employés -->
-		<form class="form-horizontal" th:action="@{/gestion_employe}" method="post">
+		<form class="form-horizontal" action="#"
+			th:action="@{/gestion_employe}" th:object="${employeeForm}"
+			method="post">
 
 			<!--NAME -->
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="name">Name :</label>
 				<div class="col-sm-2">
 					<input type="text" class="form-control" id="name" name="name"
-						placeholder="Enter your name">
+						th:field="*{name}" placeholder="Enter your name">
 				</div>
 			</div>
 
 			<!--LASTNAME -->
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="lastName">Last name:</label>
+				<label class="control-label col-sm-2" for="lastName">Last
+					name:</label>
 				<div class="col-sm-2">
-					<input type="text" class="form-control" id="lastName" name="lastName"
+					<input type="text" class="form-control" id="lastName"
+						name="lastName" th:field="*{lastName}"
 						placeholder="Enter your last name">
 				</div>
 			</div>
@@ -53,27 +57,31 @@
 				<label class="control-label col-sm-2" for="salary">Salary :</label>
 				<div class="col-sm-2">
 					<input type="text" class="form-control" id="salary" name="salary"
-						placeholder="0.00">
+						th:field="*{salary}" placeholder="0.00">
 				</div>
 			</div>
 
 			<!--SERVICE -->
 			<div class="form-group" th:if="${services} != null">
-				<label class="control-label col-sm-2" for="service">Select service from list :</label>
+				<label class="control-label col-sm-2" for="service">Select
+					service from list :</label>
 				<div class="col-sm-2">
-					<select class="form-control" id="service" th:name="libelleService">
-						<option th:each="service : ${services}" th:text="${service.libelle}"></option>
+					<select class="form-control" id="service" name="service"
+						th:field="${service}" th:remove="all-but-first">
+						<option th:each="service : ${services}"
+							th:text="${service.libelle}" th:value="${service}"></option>
 					</select>
 				</div>
 			</div>
 
 			<!--EMABAUCHE DATE -->
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="dateEmbauche" >Date
+				<label class="control-label col-sm-2" for="dateEmbauche">Date
 					:</label>
 				<div class="col-sm-2">
 					<input type="date" class="form-control" id="dateEmbauche"
-						placeholder="Enter the date" name="dateEmbauche">
+						th:field="*{dateEmbauche}" placeholder="Enter the date"
+						name="dateEmbauche">
 				</div>
 			</div>
 
@@ -82,7 +90,7 @@
 				<label class="control-label col-sm-2" for="login">Login :</label>
 				<div class="col-sm-2">
 					<input type="text" class="form-control" id="login"
-						placeholder="Enter your login"  name="login">
+						th:field="*{login}" placeholder="Enter your login" name="login">
 				</div>
 			</div>
 
@@ -91,7 +99,8 @@
 				<label class="control-label col-sm-2" for="password">Password
 					:</label>
 				<div class="col-sm-2">
-					<input type="password" class="form-control" id="password" name="password"
+					<input type="password" class="form-control" id="password"
+						name="password" th:field="*{password}"
 						placeholder="Enter your password">
 				</div>
 			</div>
@@ -99,51 +108,70 @@
 			<!--SUBMIT -->
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit"  id="ajout" class="btn btn-default">Submit</button>
+					<button type="submit" id="ajout" class="btn btn-default">Submit</button>
 				</div>
 			</div>
-			<label th:text="${dateEmbauche}"></label>
-			<p>/////// AFFICHAGE DES EXCEPTIONS SONT A DROITE</p>
+			<div class="alert alert-warning" th:if="${#fields.hasErrors('name')}">
+				<strong>Warning!</strong> 
+				<!-- AFFICHAGE DES MESSAGES D'ERREURS -->
+				<!--NAME ERROR -->
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name
+					Error</p>
+				<!-- LAST NAME ERROR -->
+				<p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName
+					Error</p>
+				<!--SALARY ERROR -->
+				<p th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}">Salary
+					Error</p>
+				<!-- SERVICE ERROR -->
+				<p th:if="${#fields.hasErrors('service')}" th:errors="*{service}">Service
+					Error</p>
+				<!--DATE EMBAUCHE ERROR -->
+				<p th:if="${#fields.hasErrors('dateEmbauche')}"
+					th:errors="*{dateEmbauche}">Date Embauche Error</p>
+				<!--LOGIN ERROR -->
+				<p th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Login
+					Error</p>
+				<!--PASSWORD ERROR -->
+				<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password
+					Error</p>
+			</div>
 		</form>
-		
+
 		<!-- LE TABLEAU DAFFICHAGE  -->
-			<table class="table table-bordered table-sm">
-				<thead>
-					<tr>
-						<th>Firstname</th>
-						<th>Lastname</th>
-						<th>Salary</th>
-						<th>Service</th>
-						<th>Embauche Date</th>
-						<th>Login</th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="employer : ${employers}" th:name="lineData" th:value="${employer}">
-						<td>
-							<label th:text="${employer.name}"></label>
-							<input type="hidden" th:value="${employer.name}" th:name="hiddenName"/>
-						</td>
-						<td><label th:text="${employer.lastName}"></label></td>
-						<td><label th:text="${employer.salary}"></label></td>
-						<td><label th:text="${employer.service.libelle}"></label></td>
-						<td><label th:text="${employer.dateEmbauche}"></label></td>
-						<td><label th:text="${employer.login}"></label></td>
-						<td>
-							<a class="btn btn-default" th:href="@{/delete_employe(firstName=${employer.name})}" role="button">
-							    Delete
-						   </a>
-						</td>
-						<td>
-							<a class="btn btn-default" th:href="@{/form_update_employer(idUser=${employer.idUser})}" role="button">
-							    Update
-						   </a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+		<table class="table table-bordered table-sm">
+			<thead>
+				<tr>
+					<th>Firstname</th>
+					<th>Lastname</th>
+					<th>Salary</th>
+					<th>Service</th>
+					<th>Embauche Date</th>
+					<th>Login</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="employer : ${employers}" th:name="lineData"
+					th:value="${employer}">
+					<td><label th:text="${employer.name}"></label> <input
+						type="hidden" th:value="${employer.name}" th:name="hiddenName" />
+					</td>
+					<td><label th:text="${employer.lastName}"></label></td>
+					<td><label th:text="${employer.salary}"></label></td>
+					<td><label th:text="${employer.service}"></label></td>
+					<td><label th:text="${employer.dateEmbauche}"></label></td>
+					<td><label th:text="${employer.login}"></label></td>
+					<td><a class="btn btn-default"
+						th:href="@{/delete_employe(firstName=${employer.name})}"
+						role="button"> Delete </a></td>
+					<td><a class="btn btn-default"
+						th:href="@{/form_update_employer(idUser=${employer.idUser})}"
+						role="button"> Update </a></td>
+				</tr>
+			</tbody>
+		</table>
 		///// PAGINATION APRÉS ICI
 	</div>
 </body>

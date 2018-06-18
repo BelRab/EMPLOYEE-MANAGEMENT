@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Inheritance(strategy=InheritanceType.JOINED)			//		Je vais la voir aprés 
 @Entity
@@ -21,8 +23,12 @@ public abstract class User implements Serializable {
 	@Column
 	private int idUser;
 	@Column(length=20)
+	@NotEmpty(message="Login field must have not be empty.")
+	@Size(min=3,max=10,message="Invalid Login , must be between 3 and 10 characters")
 	private String login;
 	@Column(length=20)
+	@NotEmpty(message="Password field must have not be empty.")
+	@Size(min=3,max=10,message="Invalid Password , must be between 3 and 10 characters")
 	private String password;
 
 	public User() {

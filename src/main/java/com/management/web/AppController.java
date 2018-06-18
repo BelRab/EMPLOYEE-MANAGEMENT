@@ -5,11 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,48 +31,39 @@ public class AppController {
 	private InterfaceEmployer interfaceEmployer;
 	private Service service;
 
-	// GESTION DES EMPLOYÉS
-	@RequestMapping("/gestion_employe")
-	public String afficherEmployer(Model model) {
+	// SHOW FORM EMPLOYEE
+
+	@GetMapping("/gestion_employe")
+
+	public String afficherEmployer(Model model, Employer employeeForm) {
 
 		List<Employer> employers = interfaceEmployer.listAllEmployer();
 		List<Service> services = interfaceService.listAllService();
 
 		model.addAttribute("employers", employers);
-		if (services != null) {
-			model.addAttribute("services", services);
-		}
+		model.addAttribute("services", services);
+		model.addAttribute("service", new Service());
+		model.addAttribute("employeeForm", employeeForm);
 
 		return "employe";
 	}
 
-	// AJOUTER UN NOUVEAU EMPLOYÉ
+	// ADD NEW EMPLOYEE
 
-	@RequestMapping(value = { "/gestion_employe" }, method = RequestMethod.POST)
+	@PostMapping("/gestion_employe")
 
-	public String AjouterEmployer(Model model, @RequestParam(name = "name") String name,
-			@RequestParam(name = "lastName") String lastName, @RequestParam(name = "salary") double salary,
-			@RequestParam(name = "libelleService") String libelleService,
-			@RequestParam(name = "dateEmbauche") String dateEmbauche, @RequestParam(name = "login") String login,
-			@RequestParam(name = "password") String password) {
+	public String addNewEmployee(Model model, @Valid @ModelAttribute("employeeForm") Employer employeeForm,
+			BindingResult result) {
+		if (result.hasErrors()) {
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
-
-		Date dateConverted = null;
-		try {
-			dateConverted = simpleDateFormat.parse(dateEmbauche);
-		} catch (ParseException e) {
-			e.printStackTrace();
+			return afficherEmployer(model, employeeForm);
 		}
+//		Service service = new Service("code1", "libelle1");
+//		interfaceService.addService(service);
+//		employeeForm.setService(service);
+		interfaceEmployer.addEmployer(employeeForm);
 
-		Service service = interfaceService.findByServiceLibelle(libelleService);
-		Employer employer = new Employer(login, password, name, lastName, dateConverted, salary, service);
-
-		interfaceEmployer.addEmployer(employer);
-		List<Employer> employers = interfaceEmployer.listAllEmployer();
-
-		model.addAttribute("employers", employers);
-		return "employe";
+		return afficherEmployer(model, employeeForm);
 	}
 
 	// DELETE EMPLOYER
@@ -132,29 +127,33 @@ public class AppController {
 	}
 
 	// AFFICHAGE DE SERVICE
-	@RequestMapping("/gestion_service")
-	public String afficherService(Model model) {
+	@GetMapping("/gestion_service")
+
+	public String afficherService(Model model, Service serviceForm) {
 
 		List<Service> services = interfaceService.listAllService();
 
 		model.addAttribute("services", services);
+		model.addAttribute("serviceForm", serviceForm);
 		return "service";
 	}
 
 	// AJOUTER UN NOUVEAU SERVICE
-	@RequestMapping(value = { "/gestion_service" }, method = RequestMethod.POST)
+	@PostMapping("/gestion_service")
 
-	public String AjouterService(Model model, @ModelAttribute(value="formService") Service service,BindingResult result) {
-
-//		service = new Service(service.getCode(), s);
-
-		
-		
-		interfaceService.addService(service);
+	public String AjouterService(Model model, @Valid @ModelAttribute("serviceForm") Service serviceForm,
+			BindingResult result) {
 
 		List<Service> services = interfaceService.listAllService();
+		if (result.hasErrors()) {
+			model.addAttribute("services", services);
+			return "service";
+		}
+
+		interfaceService.addService(serviceForm);
 
 		model.addAttribute("services", services);
+		model.addAttribute("serviceForm", serviceForm);
 
 		return "service";
 
@@ -234,7 +233,7 @@ public class AppController {
 	public String rechercherEmployerEntre2Dates(Model model, @RequestParam(name = "dateStart") String dateStart,
 			@RequestParam(name = "dateEnd") String dateEnd) {
 		// conversion de deux dates
-		
+
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
 
 		Date dateConverted1 = null;
@@ -245,12 +244,12 @@ public class AppController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
-		List<Employer> employers = interfaceEmployer.employersBetweenTwoDate(dateConverted1,dateConverted2);
 
-		if(employers.isEmpty()) {
+		List<Employer> employers = interfaceEmployer.employersBetweenTwoDate(dateConverted1, dateConverted2);
+
+		if (employers.isEmpty()) {
 			model.addAttribute("erreur", "Il n'existe aucun employer entre ces deux dates, merci de reessayer!");
-		}else {
+		} else {
 			model.addAttribute("employers", employers);
 		}
 		return "deuxdates";
@@ -265,3 +264,20 @@ public class AppController {
 	}
 
 }
+// SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+//
+// Date dateConverted = null;
+// try {
+// dateConverted = simpleDateFormat.parse(dateEmbauche);
+// } catch (ParseException e) {
+// e.printStackTrace();
+// }
+//
+// Service service = interfaceService.findByServiceLibelle(libelleService);
+// Employer employer = new Employer(login, password, name, lastName,
+// dateConverted, salary, service);
+//
+// interfaceEmployer.addEmployer(employer);
+// List<Employer> employers = interfaceEmployer.listAllEmployer();
+//
+// model.addAttribute("employers", employers);

@@ -6,16 +6,22 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Employer extends User implements Serializable {
 
+	@Size(min=3,max=15,message = "Name field must have max 15 characters and min 3 characters.")
 	private String name;
+	@Size(min=3,max=15,message = "Lastname field must have max 15 characters and min 3 characters.")
 	private String lastName;
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@NotNull(message="Date must not be Null.")
 	private Date dateEmbauche;
+	@NotNull(message="You must put a salary.")
 	private double salary;
 	@ManyToOne // Toujours ManyToOne c'est une clé etrangere
 	@JoinColumn(name="idService")
@@ -103,11 +109,12 @@ public class Employer extends User implements Serializable {
 	}
 
 	/**
-	 * @param service
-	 *            the service to set
+	 * @param service the service to set
 	 */
 	public void setService(Service service) {
 		this.service = service;
 	}
+
+	
 
 }

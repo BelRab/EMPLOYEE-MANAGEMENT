@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Service implements Serializable {
@@ -17,8 +19,11 @@ public class Service implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO) // Je vais la voir aprés
 	private int idService;
 	@Column
+	@Size(min=2,max=10)
+	@NotEmpty
 	private String code;
 	@Column
+	@Size(min=2,max=20)
 	private String libelle;
 	@OneToMany(mappedBy = "service")
 	private List<Employer> employers;
@@ -61,6 +66,7 @@ public class Service implements Serializable {
 		this.code = code;
 	}
 
+
 	/**
 	 * @return the libelle
 	 */
@@ -69,8 +75,7 @@ public class Service implements Serializable {
 	}
 
 	/**
-	 * @param libelle
-	 *            the libelle to set
+	 * @param libelle the libelle to set
 	 */
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
